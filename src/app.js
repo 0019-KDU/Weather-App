@@ -5,10 +5,19 @@ const weatherData = require("../utils/weatherData");
 
 const app = express();
 
-const port = process.env.PORT || 3000;
+const publicPath = path.join(__dirname, "../public");
+const viewsPath = path.join(__dirname, "../templates/views");
+const partialsPath = path.join(__dirname, "../templates/partials");
+
+app.set("view engine", "hbs");
+app.set("views", viewsPath);
+hbs.registerPartials(partialsPath);
+app.use(express.static(publicPath));
+
+const port = process.env.PORT || 3100;
 
 app.get("/", (req, res) => {
-  res.send("Hello ,this weather application");
+  res.render("index", { title: "Weather app" });
 });
 
 app.get("/weather", (req, res) => {
@@ -24,7 +33,7 @@ app.get("/weather", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.send("This route is does not exist");
+  res.render("404", { title: "Page not found" });
 });
 
 app.listen(port, () => {
